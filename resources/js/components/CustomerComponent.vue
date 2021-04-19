@@ -6,6 +6,35 @@
           <div class="card-header">Customers</div>
 
           <div class="card-body">
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-md-2">
+                  <strong>Search By:</strong>
+                </div>
+                <div class="col-md-3">
+                  <select
+                    name="fields"
+                    id="fields"
+                    class="form-control selectBox"
+                    v-model="queryField"
+                  >
+                    <option value="name">Name</option>
+                    <option value="email">Email</option>
+                    <option value="phone">Phone</option>
+                    <option value="total">Total</option>
+                    <option value="address">Address</option>
+                  </select>
+                </div>
+                <div class="col-md-7">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="search"
+                    v-model="query"
+                  />
+                </div>
+              </div>
+            </div>
             <div class="table-responsive">
               <table
                 class="table table-hover table-bordered table-stpered table-striped"
@@ -41,6 +70,12 @@
                   </tr>
                 </tbody>
               </table>
+              <pagination
+                v-if="pagination.last_page > 1"
+                :pagination="pagination"
+                :offset="5"
+                @paginate="getData()"
+              ></pagination>
             </div>
           </div>
         </div>
@@ -54,7 +89,12 @@
 export default {
   data() {
     return {
+      query: "",
+      queryField: "email",
       customers: [],
+      pagination: {
+        current_page: 1,
+      },
     };
   },
   mounted() {
@@ -65,14 +105,15 @@ export default {
     getData() {
       this.$Progress.start();
       axios
-        .get("/api/customers")
+        .get("/api/customers?page=" + this.pagination.current_page)
         .then((response) => {
           this.customers = response.data.data;
+          this.pagination = response.data.meta;
           this.$Progress.finish();
         })
         .catch((e) => {
           console.log(e);
-          this.$Progress.fail()
+          this.$Progress.fail();
         });
     },
   },

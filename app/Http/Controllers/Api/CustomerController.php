@@ -17,7 +17,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return new  CustomerCollection(Customer::latest()->paginate(16));
+        return new  CustomerCollection(Customer::orderBy('id','DESC')->paginate(16));
     }
 
     public function search($field,$query)
