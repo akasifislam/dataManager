@@ -3,7 +3,12 @@
     <div class="row justify-content-center">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header">Customers</div>
+          <div class="card-header">
+            <h4 class="card-title">Customers</h4>
+            <div class="card-tools">
+              <button type="button" class="btn btn-primary"><i class="fas fa-sync"></i></button>
+            </div>
+          </div>
 
           <div class="card-body">
             <div class="mb-3">
@@ -13,9 +18,8 @@
                 </div>
                 <div class="col-md-3">
                   <select
-                    name="fields"
                     id="fields"
-                    class="form-control selectBox"
+                    class="form-control"
                     v-model="queryField"
                   >
                     <option value="name">Name</option>
@@ -90,12 +94,21 @@ export default {
   data() {
     return {
       query: "",
-      queryField: "email",
+      queryField: "name",
       customers: [],
       pagination: {
         current_page: 1,
       },
     };
+  },
+  watch: {
+    query: function (newQ, old) {
+      if (newQ === "") {
+        this.getData();
+      } else {
+        this.searchData();
+      }
+    },
   },
   mounted() {
     console.log("Component mounted.");
@@ -106,6 +119,20 @@ export default {
       this.$Progress.start();
       axios
         .get("/api/customers?page=" + this.pagination.current_page)
+        .then((response) => {
+          this.customers = response.data.data;
+          this.pagination = response.data.meta;
+          this.$Progress.finish();
+        })
+        .catch((e) => {
+          console.log(e);
+          this.$Progress.fail();
+        });
+    },
+    searchData() {
+      this.$Progress.start();
+      axios.get("/api/search/customers/"+this.queryField +"/" +this.query +"?page=" +this.pagination.current_page
+        )
         .then((response) => {
           this.customers = response.data.data;
           this.pagination = response.data.meta;

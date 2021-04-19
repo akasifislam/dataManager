@@ -5,7 +5,7 @@ import Vue from 'vue'
 // progressbar import 
 import VueProgressBar from 'vue-progressbar'
 const VueProgressBarOptions = {
-    color: '#BF2403',
+    color: '#29F300',
     failedColor: '#874b4b',
     thickness: '5px',
     transition: {
