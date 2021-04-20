@@ -5,8 +5,13 @@
         <div class="card">
           <div class="card-header">
             <h4 class="card-title">Customers</h4>
-            <div class="card-tools">
-              <button type="button" class="btn btn-primary"><i class="fas fa-sync"></i></button>
+            <div
+              class="card-tools"
+              style="position: absolute; right: 1rem; top: 0.5rem"
+            >
+              <button @click="reload" type="button" class="btn btn-primary">
+                <i class="fas fa-sync"></i>
+              </button>
             </div>
           </div>
 
@@ -17,11 +22,7 @@
                   <strong>Search By:</strong>
                 </div>
                 <div class="col-md-3">
-                  <select
-                    id="fields"
-                    class="form-control"
-                    v-model="queryField"
-                  >
+                  <select id="fields" class="form-control" v-model="queryField">
                     <option value="name">Name</option>
                     <option value="email">Email</option>
                     <option value="phone">Phone</option>
@@ -131,7 +132,14 @@ export default {
     },
     searchData() {
       this.$Progress.start();
-      axios.get("/api/search/customers/"+this.queryField +"/" +this.query +"?page=" +this.pagination.current_page
+      axios
+        .get(
+          "/api/search/customers/" +
+            this.queryField +
+            "/" +
+            this.query +
+            "?page=" +
+            this.pagination.current_page
         )
         .then((response) => {
           this.customers = response.data.data;
@@ -142,6 +150,11 @@ export default {
           console.log(e);
           this.$Progress.fail();
         });
+    },
+    reload() {
+      this.getData();
+      this.query = "";
+      this.queryField = "name";
     },
   },
 };

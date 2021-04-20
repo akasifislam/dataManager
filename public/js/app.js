@@ -1999,6 +1999,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2053,6 +2054,11 @@ __webpack_require__.r(__webpack_exports__);
 
         _this2.$Progress.fail();
       });
+    },
+    reload: function reload() {
+      this.getData();
+      this.query = "";
+      this.queryField = "name";
     }
   }
 });
@@ -37826,12 +37832,37 @@ var render = function() {
       _c("div", { staticClass: "row justify-content-center" }, [
         _c("div", { staticClass: "col-md-12" }, [
           _c("div", { staticClass: "card" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "card-header" }, [
+              _c("h4", { staticClass: "card-title" }, [_vm._v("Customers")]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "card-tools",
+                  staticStyle: {
+                    position: "absolute",
+                    right: "1rem",
+                    top: "0.5rem"
+                  }
+                },
+                [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: { click: _vm.reload }
+                    },
+                    [_c("i", { staticClass: "fas fa-sync" })]
+                  )
+                ]
+              )
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _c("div", { staticClass: "mb-3" }, [
                 _c("div", { staticClass: "row" }, [
-                  _vm._m(1),
+                  _vm._m(0),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-md-3" }, [
                     _c(
@@ -37924,7 +37955,7 @@ var render = function() {
                         "table table-hover table-bordered table-stpered table-striped"
                     },
                     [
-                      _vm._m(2),
+                      _vm._m(1),
                       _vm._v(" "),
                       _c(
                         "tbody",
@@ -37942,7 +37973,7 @@ var render = function() {
                             _vm._v(" "),
                             _c("td", [_vm._v(_vm._s(customer.total))]),
                             _vm._v(" "),
-                            _vm._m(3, true)
+                            _vm._m(2, true)
                           ])
                         }),
                         0
@@ -37974,22 +38005,6 @@ var render = function() {
   )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h4", { staticClass: "card-title" }, [_vm._v("Customers")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-tools" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-primary", attrs: { type: "button" } },
-          [_c("i", { staticClass: "fas fa-sync" })]
-        )
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
