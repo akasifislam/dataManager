@@ -2,6 +2,21 @@
 require('./bootstrap');
 
 import Vue from 'vue'
+import { Form, HasError, AlertError } from 'vform'
+
+window.Form = Form
+// =========== notify start ============
+
+import Snotify, { SnotifyPosition } from 'vue-snotify'
+
+const SnotifyOptions = {
+  toast: {
+    position: SnotifyPosition.rightTop
+  }
+}
+
+Vue.use(Snotify, SnotifyOptions )
+// ============== notify end========
 // progressbar import 
 import VueProgressBar from 'vue-progressbar'
 const VueProgressBarOptions = {
@@ -21,6 +36,8 @@ const VueProgressBarOptions = {
 
 Vue.component('customer-component', require('./components/CustomerComponent.vue').default);
 Vue.component('pagination', require('./components/partial/PaginationComponent.vue').default);
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
 
 
 

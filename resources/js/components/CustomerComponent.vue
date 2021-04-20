@@ -12,6 +12,9 @@
               <button @click="reload" type="button" class="btn btn-primary">
                 <i class="fas fa-sync"></i>
               </button>
+              <button @click="create" type="button" class="btn btn-success">
+                <i class="fas fa-plus"></i>
+              </button>
             </div>
           </div>
 
@@ -86,7 +89,112 @@
         </div>
       </div>
     </div>
+    <!-- ============== modal ================= -->
+    <div
+      class="modal fade"
+      id="customerModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="customerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="customerModalLabel">
+              Add New Customer
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form @submit.prevent="storeData" @keydown="form.onKeydown($event)">
+            <div class="modal-body">
+              <alert-error :form="form"></alert-error>
+              <div class="form-group">
+                <label>Name</label>
+                <input
+                  v-model="form.name"
+                  type="text"
+                  name="name"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('name') }"
+                />
+                <has-error :form="form" field="name"></has-error>
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input
+                  v-model="form.email"
+                  type="text"
+                  name="email"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('email') }"
+                />
+                <has-error :form="form" field="email"></has-error>
+              </div>
+              <div class="form-group">
+                <label>Phone</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  v-model="form.phone"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('phone') }"
+                />
+                <has-error :form="form" field="phone"></has-error>
+              </div>
+              <div class="form-group">
+                <label>Address</label>
+                <textarea
+                  v-model="form.address"
+                  name="address"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('address') }"
+                ></textarea>
+                <has-error :form="form" field="address"></has-error>
+              </div>
+              <div class="form-group">
+                <label>Total</label>
+                <input
+                  v-model="form.total"
+                  type="number"
+                  step="0.01"
+                  name="total"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('total') }"
+                />
+                <has-error :form="form" field="total"></has-error>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                :disabled="form.busy"
+                type="submit"
+                class="btn btn-primary"
+              >
+                Save changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <vue-progress-bar></vue-progress-bar>
+    <vue-snotify></vue-snotify>
   </div>
 </template>
 
@@ -97,6 +205,14 @@ export default {
       query: "",
       queryField: "name",
       customers: [],
+      form: new Form({
+        id: "",
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        total: "",
+      }),
       pagination: {
         current_page: 1,
       },
@@ -155,6 +271,32 @@ export default {
       this.getData();
       this.query = "";
       this.queryField = "name";
+      this.$snotify.success("Data reloded", "success");
+    },
+    create() {
+      this.form.reset();
+      this.form.clear();
+      $("#customerModal").modal("show");
+    },
+    storeData() {
+      this.$Progress.start();
+      this.form.busy = true;
+      this.form
+        .post("/api/customers")
+        .then((response) => {
+          this.getData();
+          $("#customerModal").modal("hide");
+          if (this.form.successful) {
+            this.$Progress.finish();
+            this.$snotify.success("Data store", "Success");
+          } else {
+            this.$Progress.fail();
+            this.$snotify.error("Data dont store", "Error");
+          }
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
   },
 };
